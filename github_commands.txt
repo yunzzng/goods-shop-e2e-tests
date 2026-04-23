@@ -1,4 +1,4 @@
-Project_S 깃허브 명령어 가이드
+goods-shop-e2e-tests 깃허브 명령어 가이드
 
 1. Git 사용자 정보 설정 (최초 1회)
 git config --global user.name "YOUR_NAME"
@@ -17,7 +17,7 @@ git commit -m "Initial commit"
 git branch -M main
 
 6. GitHub 원격 저장소 연결
-git remote add origin https://github.com/YOUR_ID/YOUR_REPOSITORY.git
+git remote add origin git@github.com:yunzzng/goods-shop-e2e-tests.git
 
 7. 연결된 원격 저장소 확인
 git remote -v
@@ -34,7 +34,7 @@ git push
 git pull origin main
 
 11. 다른 컴퓨터에서 저장소 복제
-git clone https://github.com/YOUR_ID/YOUR_REPOSITORY.git
+git clone git@github.com:yunzzng/goods-shop-e2e-tests.git
 
 12. 선택 사항: 가상환경 및 IDE 파일 무시하기
 .gitignore 파일을 만들고 아래 예시를 추가
