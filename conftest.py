@@ -861,11 +861,32 @@ def pytest_sessionstart(session):
 
 @pytest.fixture(scope="function")
 def page(request):
+    browser_name = os.getenv("PLAYWRIGHT_BROWSER", "chromium").lower()
+    headless = os.getenv("PLAYWRIGHT_HEADLESS", "true").lower() in {"1", "true", "yes", "on"}
+    default_slow_mo = "0" if headless else "500"
+    slow_mo = int(os.getenv("PLAYWRIGHT_SLOW_MO", default_slow_mo))
+
     with sync_playwright() as p:
-        browser = p.chromium.launch(
-            headless=False,
-            slow_mo=500,
-        )
+        browser_type = getattr(p, browser_name, None)
+        if browser_type is None:
+            raise pytest.UsageError(
+                "Unsupported PLAYWRIGHT_BROWSER value. "
+                "Use one of: chromium, firefox, webkit."
+            )
+
+        try:
+            browser = browser_type.launch(
+                headless=headless,
+                slow_mo=slow_mo,
+            )
+        except PlaywrightError as exc:
+            raise pytest.UsageError(
+                "Failed to launch Playwright browser. "
+                "Try `playwright install`, or run with "
+                "`PLAYWRIGHT_BROWSER=webkit pytest` / `PLAYWRIGHT_BROWSER=firefox pytest`. "
+                "On restricted macOS environments, Chromium may be blocked by OS permissions."
+            ) from exc
+
         context = browser.new_context()
         page = context.new_page()
         request.node.page = page
